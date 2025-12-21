@@ -1,0 +1,21 @@
+{
+    "board": {
+        "size": 11,
+        "color": "midnightblue",
+        "background-color": "teal",
+        "border-color": "lightgoldenrod1",
+        "placement-colors": [
+            "lightpink3",
+            "mediumvioletred",
+            "darkturquoise"
+        ]
+    },
+    "marker": {
+        "color": "lightgoldenrod1",
+        "selected-color": "orangered"
+    },
+    "mode": "DEBUG",
+    "screen": {
+        "width": 1280
+    }
+}
