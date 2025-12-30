@@ -4,6 +4,7 @@ from dataclasses import dataclass
 import pygame.draw as draw
 from game_utils.screen import ScreenSettings
 from pygame import Rect, Vector2
+
 from triangle_solitaire import MAX_DEGREE, TriangleSolitaire
 
 Coordinate = list[tuple[float, ...]]
@@ -147,7 +148,7 @@ class TSSettings(ScreenSettings):
     def get_points(self):
         return self.__marker_positions
 
-    def draw_marker(self, center: tuple[int, int] | Vector2, color: str | None = None):
+    def draw_marker(self, center: tuple[int, int] | Vector2, color: str):
         draw.circle(
             surface=self.screen,
             color=color or self.__config.marker.color,
@@ -187,7 +188,7 @@ class TSSettings(ScreenSettings):
                 color=self.__get_marker_color(i),
             )
 
-    def carrying_marker(self, mouse_pos: Vector2 | None = None, carrying: bool = False):
+    def carrying_marker(self, mouse_pos: Vector2, carrying: bool):
         self.__carrying = carrying
         self.__mouse_pos = mouse_pos
 
@@ -195,15 +196,13 @@ class TSSettings(ScreenSettings):
         self.draw_board()
 
         if self.__carrying:
-            self.draw_marker(self.__mouse_pos)
+            self.draw_marker(self.__mouse_pos, self.__config.marker.selected_color)
 
     def __get_marker_color(self, marker_id: int):
         if (
             self.__triangle_game.get_selected_marker() == marker_id
-            and self.__triangle_game.has_marker(marker_id)
+            or not self.__triangle_game.has_marker(marker_id)
         ):
-            return self.__config.marker.selected_color
-        elif self.__triangle_game.has_marker(marker_id):
-            return self.__config.marker.color
-        else:
             return "black"
+        else:
+            return self.__config.marker.color

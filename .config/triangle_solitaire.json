@@ -1,6 +1,6 @@
 {
     "board": {
-        "size": 11,
+        "size": 6,
         "color": "midnightblue",
         "background-color": "teal",
         "border-color": "lightgoldenrod1",

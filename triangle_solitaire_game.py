@@ -4,6 +4,7 @@ import pygame.mouse as mouse
 from game_utils.game import Game
 from pygame import Rect, Vector2
 from pygame.locals import K_ESCAPE, MOUSEBUTTONDOWN, MOUSEBUTTONUP
+
 from triangle_solitaire import TriangleSolitaire
 from triangle_solitaire_screen import TSSettings
 
@@ -51,14 +52,13 @@ class TriangleSolitaireGame(Game):
                     if self.__triangle_game.has_marker(i) and self.__is_near_mouse(
                         point
                     ):
-                        self.__triangle_game.set_marker(i, False)
+                        # self.__triangle_game.set_marker(i, False)
                         self.__carrying = True
-                        self.selected_marker = i
                         self.__triangle_game.select_marker(i)
         elif self.__carrying:
             self.__carrying = False
-            self.screen_settings.carrying_marker(carrying=self.__carrying)
+            self.screen_settings.carrying_marker(self.__mouse_pos, self.__carrying)
             if not self.__attempt_jump():
-                self.__triangle_game.set_marker(self.selected_marker, True)
+                self.__triangle_game.unselect_marker()
             elif not self.__triangle_game.has_legal_moves():
                 self.running = False
