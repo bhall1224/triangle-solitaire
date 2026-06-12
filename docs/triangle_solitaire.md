@@ -3,100 +3,33 @@
 
 # System B: Triangle Solitaire
 
-## Python script instruction
+## Python script instructions
 
-Send the ***TriangleProcessInput*** request as an escaped JSON string passed as a command-line argument.  It will be deserialized and processed by the script, which will return ***TriangleProcessOutput*** as an escaped JSON string
+### Getting started
 
-### TriangleProcessInput:
+* `git clone https://github.com/bhall1224/triangle-solitaire.git`
 
+* `cd triangle-solitaire`
 
-```yaml
-size:
-    type: int
-    description: Number of markers/triangles along one side of the board
-    Optional, default = 5
+* `python3.12 -m venv .venv //activate based on your system` 
 
-markers:    
-    type: int
-    description: Binary representation of marker placement on game board
-    Optional, omit for initial state
-    ex: 0b'00111111111111111' represents the opening configuration of the
-    game board. 0b'0100000000000000' represents a perfect reconfiguration
+* `python -m pip install -r requirements.txt`
 
-proposal:
-    type: object
-    description: The source and target bit proposed, representing markers
-    on the board
-    - source:
-        type: int
-        description: Source bit from board
-    - target:
-        type: int
-        description: Target bit from board
-```
+### Running with Python (3.12)
 
-### TriangleProcessOutput:
+* `python main.py`
 
-```yaml
-markers:
-    type: int
-    description: Binary representation of marker placement on game board
-    ex: 0b'00111111111111111' represents the opening configuration of the game board.
-    0b'01000000000000000' represents a perfect reconfiguration. Only N bits needed
+### Building and running an executable
 
-nims:
-    type: int 
-    description: Binary representation of Nim values. Nim values are 1, 2, or 3;
-    representing a color class of a 3-colorable graph. Used to calculate jumps.
-    See Rules section
-    ex: [1, 2, 3] => 011011
+* `pyinstaller main.py -F --distpath . -n triangle-solitaire --add-data=.config/triangle_solitaire.json:.config`
 
-size:
-    type: int
-    description: Number of markers/triangles along one side of the board. 
-    Boards of size 3(size) + 1 aren't solvable, and we limit the scope of 
-    difficulty by allowing only these values
-    ex: 5, 6, 8, or 9
+* `./triangle-solitaire`
 
-status:
-    type: enum
-    description: START, PASS, FAIL, WIN, LOSE
-    ex: Status of PASS or FAIL for jump proposals. WIN if only one marker remains
-    LOSE otherwise. START for initial configurations
-```
+### Packaging
+
+> *Package with .config file to run as a standalone application*
 
 
-## Rules
-
-* A board is given an initial configuration of markers
-
-    - All but one board location is placed with a marker
-
-* A series of transformations are applied to the marker configuration
-
-    - A marker may "jump" another marker to an unoccupied space, and the "jump" marker is removed
-
-* The game is complete when no more "jumps" are possible
-
-* Try to figure out a series of transformations such that only one marker remains.
-
-## Playing the game
-
-Invoke the script with `python trianle_solitaire.py [args]`.
-
->       Accepts and returns JSON strings of the models defined above.
->       If no args are given, a size of 5 is assumed and a status of START is returned.
->       If the request is malformed, an error is raised
-
-1. Use a request with null markers and given size to generate a game board.  Returns START status and opening marker configuration
-
-2. Send a return request with the given marker config and size, with a jump proposal
-
-3. Proposals are a source and target bit, and the process will return a new configuration and PASS if proposal is accepted, otherwise the provided configuration with a status of FAIL
-
-4. The game is over when you no longer have legal moves available.  The number of markers left is your score.  If you have 1 left, you get a status of WIN! Otherwise it's a big ol' LOSE...
-
->       You will have to do some maths to figure out if your move is valid
 
 ## Maths
 
@@ -197,7 +130,7 @@ $\forall\ k \in\ \beta,\ \exists\ nim\ \in\ Nims\..$
 $$
 \chi(k)\ = nim\\
 \text{Let}\ i,\ j\ \in\ \mathbb{Z},\ \text{for board locations on row}\ i\ \text{and column}\ j\\
-k = (\sum_{h=0}^{i - 1} \text{row length}_h) + j\\
+k = (\sum_{h=0}^{i 1} \text{row length}_h) + j\\
 nim = (i \mod 3) + (j \mod 3) + 1 = \chi(k)
 $$
 
@@ -210,7 +143,7 @@ size = number_of_markers_on_side
 
 initial_state = 0
 
-for i in range(n - 1):
+for i in range(n 1):
     initial_state |= 1 << i
 
 # a string of the binary representation
@@ -223,7 +156,7 @@ marker_state = [
 ]
 
 nims_state = [
-    [NIMS[(j + (size - i)) % MAX_DEGREE] for j in range(size - i)]
+    [NIMS[(j + (size i)) % MAX_DEGREE] for j in range(size i)]
     for i in range(size)
 ]
 
@@ -231,7 +164,7 @@ nims_state = [
 nims_config = 0
 
 for i in range(size):
-    for j in range(size - i):
+    for j in range(size i):
         nims_config |= nim_state[i][j]
         nims <<= 2 # each nim is two bits long
 
