@@ -1,6 +1,5 @@
 import json
 import os
-import sys
 
 import pygame
 from triangle_solitaire import TriangleSolitaire
@@ -9,15 +8,7 @@ from triangle_solitaire_screen import TSGameConfig, TSSettings
 
 pygame.init()
 
-
-def cli_game(config):
-    side_length = config["board"]["size"]
-    game = TriangleSolitaire(size=side_length)
-
-    print(game)
-
-
-def gui_game(config):
+def run_ts_game(config):
     board = config["board"]
     screen = config["screen"]
     screen_w = int(screen["width"])
@@ -56,8 +47,4 @@ if __name__ == "__main__":
         encoding="utf-8",
     ) as file:
         config = json.load(file)
-
-        if "--cli" in sys.argv:
-            cli_game(config)
-        else:
-            gui_game(config)
+        run_ts_game(config)
