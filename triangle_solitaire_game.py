@@ -1,22 +1,22 @@
 import pygame.event as event
 import pygame.key as key
 import pygame.mouse as mouse
-from game_utils.game import Game
+from system_b.game import Game
 from pygame import Rect, Vector2
 from pygame.locals import K_ESCAPE, MOUSEBUTTONDOWN, MOUSEBUTTONUP
 
 from triangle_solitaire import TriangleSolitaire
-from triangle_solitaire_screen import TSSettings
+from triangle_solitaire_screen import TSScreenReference
 
 
 class TriangleSolitaireGame(Game):
-    def __init__(self, screen_settings: TSSettings, triangle_game: TriangleSolitaire):
-        super().__init__(screen_settings)
+    def __init__(self, screen_ref: TSScreenReference, triangle_game: TriangleSolitaire):
+        super().__init__(screen_ref)
         # seems silly, but ensures we're using the right instance
-        self.screen_settings = screen_settings
+        self.screen_ref = screen_ref
         self.__carrying = False
         self.__dragging = False
-        self.__mouse_radius: float = self.screen_settings.width / 40.0
+        self.__mouse_radius: float = self.screen_ref.dimensions().x / 40.0
         self.__mouse_pos: Vector2 = Vector2()
         self.__triangle_game = triangle_game
 
@@ -27,10 +27,10 @@ class TriangleSolitaireGame(Game):
             self.__dragging = False
 
         if key.get_pressed()[K_ESCAPE]:
-            self.running = False
+            self._running = False
 
     def __attempt_jump(self) -> bool:
-        for i, point in enumerate(self.screen_settings.get_points()):
+        for i, point in enumerate(self.screen_ref.get_points()):
             if (
                 not self.__triangle_game.has_marker(i)
                 and self.__is_near_mouse(point)
@@ -46,19 +46,18 @@ class TriangleSolitaireGame(Game):
     def update(self):
         if self.__dragging:
             self.__mouse_pos = Vector2(mouse.get_pos())
-            self.screen_settings.carrying_marker(self.__mouse_pos, self.__carrying)
+            self.screen_ref.carrying_marker(self.__mouse_pos, self.__carrying)
             if not self.__carrying:
-                for i, point in enumerate(self.screen_settings.get_points()):
+                for i, point in enumerate(self.screen_ref.get_points()):
                     if self.__triangle_game.has_marker(i) and self.__is_near_mouse(
                         point
                     ):
-                        # self.__triangle_game.set_marker(i, False)
                         self.__carrying = True
                         self.__triangle_game.select_marker(i)
         elif self.__carrying:
             self.__carrying = False
-            self.screen_settings.carrying_marker(self.__mouse_pos, self.__carrying)
+            self.screen_ref.carrying_marker(self.__mouse_pos, self.__carrying)
             if not self.__attempt_jump():
                 self.__triangle_game.unselect_marker()
             elif not self.__triangle_game.has_legal_moves():
-                self.running = False
+                self._running = False

@@ -2,7 +2,7 @@ import math
 from dataclasses import dataclass
 
 import pygame.draw as draw
-from game_utils.screen import ScreenSettings
+from system_b.screen import ScreenReference
 from pygame import Rect, Vector2
 
 from triangle_solitaire import MAX_DEGREE, TriangleSolitaire
@@ -29,12 +29,11 @@ class TSGameConfig:
     marker: Marker
 
 
-class TSSettings(ScreenSettings):
+class TSScreenReference(ScreenReference):
     def __init__(
         self,
         config: TSGameConfig,
         game: TriangleSolitaire,
-        *,
         width=0,
         height=0,
         frames_per_second=60,
@@ -138,6 +137,9 @@ class TSSettings(ScreenSettings):
 
         self.__carrying = False
         self.__mouse_pos = Vector2()
+
+    def dimensions(self):
+        return Vector2(self._width, self._height)
 
     def get_board_size(self) -> int:
         """

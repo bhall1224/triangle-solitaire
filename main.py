@@ -4,7 +4,7 @@ import os
 import pygame
 from triangle_solitaire import TriangleSolitaire
 from triangle_solitaire_game import TriangleSolitaireGame
-from triangle_solitaire_screen import TSGameConfig, TSSettings
+from triangle_solitaire_screen import TSGameConfig, TSScreenReference
 
 pygame.init()
 
@@ -15,7 +15,7 @@ def run_ts_game(config):
     screen_h = screen_w / 16 * 9
     size = board["size"]
     game = TriangleSolitaire(size=size)
-    settings = TSSettings(
+    settings = TSScreenReference(
         config=TSGameConfig(
             board=TSGameConfig.Board(
                 size=board["size"],
@@ -34,7 +34,7 @@ def run_ts_game(config):
         bg_color=board["background-color"],
         game=game,
     )
-    main = TriangleSolitaireGame(screen_settings=settings, triangle_game=game)
+    main = TriangleSolitaireGame(screen_ref=settings, triangle_game=game)
     main.run()
 
     print("game over")
